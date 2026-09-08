@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Project Ascension 2.0</title>
+<style>
+:root{
+  --bg:#080d16;--panel:#101827;--card:#172236;--line:#2c3b54;
+  --text:#f5f7fb;--muted:#9aa8bc;--gold:#f3b63f;
+  --pink:#ef6f91;--green:#61d3a0;--blue:#65a8ff;--purple:#b68cff;--orange:#f29b55;
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#17243a 0,#080d16 42%);color:var(--text);font:16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit} .app{max-width:1050px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:14px}
+.kicker{font-size:12px;letter-spacing:.22em;color:var(--muted)}h1{margin:2px 0;font-size:clamp(28px,6vw,48px);font-style:italic} .gold{color:var(--gold)}
+.card{background:rgba(16,24,39,.94);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.grid{display:grid;gap:12px}.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px}.stat b{font-size:26px}.label{font-size:12px;color:var(--muted);letter-spacing:.1em}.bar{height:8px;background:#2a374b;border-radius:99px;overflow:hidden;margin-top:8px}.fill{height:100%;border-radius:99px}
+.cols{grid-template-columns:1.15fr .85fr}@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.section-title{display:flex;justify-content:space-between;gap:10px;align-items:center}.section-title h2{margin:0;font-size:18px}
+button.action,button.quest{width:100%;min-height:48px;border:1px solid var(--line);background:#1a2639;color:var(--text);border-radius:12px;padding:11px 13px;text-align:left;cursor:pointer}
+button.action:hover,button.quest:hover{border-color:var(--gold)}
+.quest{display:flex!important;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}.quest.done{opacity:.55;text-decoration:line-through}
+.badge{font-size:12px;color:var(--gold);white-space:nowrap}.skill{padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:8px;background:#131e2f}.skill-top{display:flex;justify-content:space-between}.skill small{color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;margin-top:14px}.tabs button{min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:8px 13px;white-space:nowrap}.tabs button.active{background:var(--gold);color:#101010}
+.hidden{display:none}.note{color:var(--muted);font-size:13px;line-height:1.5}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--gold);color:#111;padding:12px 16px;border-radius:12px;font-weight:700;display:none}
+.reset{float:right;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header>
+<div><div class="kicker">PROJECT ASCENSION</div><h1>ASCENSION <span class="gold">2.0</span></h1><div class="note">Character development system · Athlete Arc</div></div>
+<div style="text-align:right"><div class="label">CURRENT LEVEL</div><div style="font-size:34px;font-weight:900">17</div></div>
+</header>
+
+<section class="card">
+<div class="section-title"><div><b>LEVEL PROGRESS</b><div class="note"><span id="xp">8180</span> / 8500 XP · <span id="toGo">320</span> XP to Level 18</div></div><button class="reset" id="reset">Reset this demo</button></div>
+<div class="bar"><div class="fill" id="xpbar" style="background:var(--gold);width:96.2%"></div></div>
+</section>
+
+<section class="grid stats">
+<div class="stat"><div class="label">STRENGTH</div><b>16</b><div class="bar"><div class="fill" style="background:var(--pink);width:78%"></div></div></div>
+<div class="stat"><div class="label">CONDITIONING</div><b>15</b><div class="bar"><div class="fill" style="background:var(--green);width:72%"></div></div></div>
+<div class="stat"><div class="label">MOBILITY</div><b>14</b><div class="bar"><div class="fill" style="background:var(--blue);width:65%"></div></div></div>
+<div class="stat"><div class="label">COMBAT</div><b>12</b><div class="bar"><div class="fill" style="background:var(--purple);width:55%"></div></div></div>
+<div class="stat"><div class="label">SPORTS</div><b>15</b><div class="bar"><div class="fill" style="background:var(--orange);width:70%"></div></div></div>
+</section>
+
+<div class="tabs">
+<button class="active" data-tab="dashboard">Dashboard</button>
+<button data-tab="skills">Skill Tree</button>
+<button data-tab="quests">Quests</button>
+<button data-tab="economy">XP Economy</button>
+</div>
+
+<section id="dashboard" class="tab card">
+<div class="section-title"><h2>⚡ QUICK ACTIONS</h2><span class="badge">Balanced XP</span></div>
+<div class="grid cols" style="margin-top:10px">
+<div>
+<button class="action log" data-xp="50">💪 Log full-body session <span class="badge">+50 XP</span></button>
+<button class="action log" data-xp="25">🎯 Log skill practice <span class="badge">+25 XP</span></button>
+<button class="action log" data-xp="40">🥊 Log boxing / combat session <span class="badge">+40 XP</span></button>
+<button class="action log" data-xp="40">🏐 Log sports session <span class="badge">+40 XP</span></button>
+</div>
+<div>
+<div class="skill"><div class="skill-top"><b>🔥 NEXT MAJOR UNLOCK</b><span class="badge">+100 XP</span></div><small>First unassisted dip</small><div class="bar"><div class="fill" style="background:var(--gold);width:72%"></div></div></div>
+<div class="skill"><div class="skill-top"><b>🧘 L-SIT</b><span>35%</span></div><small>Tuck → one-leg → alternating → full</small><div class="bar"><div class="fill" style="background:var(--blue);width:35%"></div></div></div>
+<div class="skill"><div class="skill-top"><b>💪 PUSH-UP</b><span>60%</span></div><small>Elevated → knee → full</small><div class="bar"><div class="fill" style="background:var(--pink);width:60%"></div></div></div>
+</div></div>
+</section>
+
+<section id="skills" class="tab card hidden">
+<div class="section-title"><h2>⚔️ SKILL TREE</h2><span class="badge">Practice → Unlock → Master</span></div>
+<div id="skillsList"></div>
+</section>
+
+<section id="quests" class="tab card hidden">
+<div class="section-title"><h2>🎯 WEEKLY QUESTS</h2><span id="qdone" class="badge">0 / 5</span></div>
+<div id="questsList"></div>
+<p class="note">The old tiny habits can still be recorded elsewhere. These quests are the things that move the character forward.</p>
+</section>
+
+<section id="economy" class="tab card hidden">
+<div class="section-title"><h2>🪙 XP ECONOMY</h2><span class="badge">No XP inflation</span></div>
+<div class="grid cols" style="margin-top:10px">
+<div>
+<div class="skill"><b>Full-body session</b><br><small>+50 XP · same base value as your old gym session</small></div>
+<div class="skill"><b>Skill practice</b><br><small>+25 XP · small but repeatable progress</small></div>
+<div class="skill"><b>Sports / boxing session</b><br><small>+40 XP · meaningful performance work</small></div>
+</div>
+<div>
+<div class="skill"><b>Major skill unlock</b><br><small>+100 XP · first dip, full push-up, full L-sit, first pull-up</small></div>
+<div class="skill"><b>Weekly quest</b><br><small>+100 XP · rewards consistency without paying for every tiny action</small></div>
+<div class="skill"><b>Big milestone</b><br><small>+150–250 XP · reserved for genuinely difficult achievements</small></div>
+</div></div>
+</section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const KEY="projectAscensionDemoV2";
+const defaults={xp:8180,quests:[false,false,false,false,false]};
+let state=JSON.parse(localStorage.getItem(KEY)||"null")||defaults;
+const skills=[
+["💪 Push-ups","Elevated → knee → full push-up","60%","pink"],
+["🔥 Dips","Support → assisted → first unassisted → 5 reps → weighted","72%","gold"],
+["🧘 L-sit","Tuck → one-leg → alternating → full L-sit","35%","blue"],
+["🦾 Pull-ups","Australian → assisted → negatives → first pull-up","25%","purple"],
+["🦵 Pistol squat","Assisted → box → counterweight → full pistol","20%","green"]
+];
+const quests=[
+["Complete 2 full-body sessions",100],
+["Complete 3 skill-practice sessions",100],
+["Complete 1 boxing / combat session",100],
+["Complete 2 sports sessions",100],
+["Unlock one new physical skill",100]
+];
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function render(){
+ document.getElementById("xp").textContent=state.xp.toLocaleString();
+ document.getElementById("toGo").textContent=Math.max(0,8500-state.xp).toLocaleString();
+ document.getElementById("xpbar").style.width=Math.min(100,state.xp/8500*100)+"%";
+ const sl=document.getElementById("skillsList");sl.innerHTML=skills.map(s=>`<div class="skill"><div class="skill-top"><b>${s[0]}</b><span>${s[2]}</span></div><small>${s[1]}</small><div class="bar"><div class="fill" style="background:var(--${s[3]==="gold"?"gold":s[3]});width:${s[2]}"></div></div></div>`).join("");
+ const ql=document.getElementById("questsList");ql.innerHTML=quests.map((q,i)=>`<label class="quest ${state.quests[i]?"done":""}"><span><input type="checkbox" data-q="${i}" ${state.quests[i]?"checked":""}> ${q[0]}</span><span class="badge">+${q[1]} XP</span></label>`).join("");
+ document.querySelectorAll("[data-q]").forEach(c=>c.addEventListener("change",e=>{const i=+e.target.dataset.q;state.quests[i]=e.target.checked;state.xp+=e.target.checked?quests[i][1]:-quests[i][1];save();render();toast(e.target.checked?"Quest complete! +100 XP":"Quest reopened. XP removed.")}));
+ document.getElementById("qdone").textContent=state.quests.filter(Boolean).length+" / "+quests.length;
+}
+function toast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display="none",1800)}
+document.querySelectorAll(".log").forEach(b=>b.addEventListener("click",()=>{const n=+b.dataset.xp;state.xp+=n;save();render();toast("Logged! +"+n+" XP")}));
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.remove("hidden")}));
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Reset the demo to 8,180 XP?")){state={xp:8180,quests:[false,false,false,false,false]};save();render();}});
+render();
+</script>
+</body>
+</html>
