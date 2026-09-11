@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Project Ascension 2.0 — Full Build</title>
+<style>
+:root{
+ --bg:#080d16;--panel:#101827;--card:#172236;--line:#2c3b54;--text:#f5f7fb;--muted:#9aa8bc;
+ --gold:#f3b63f;--pink:#ef6f91;--green:#61d3a0;--blue:#65a8ff;--purple:#b68cff;--orange:#f29b55;
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#17243a 0,#080d16 48%);color:var(--text);font:16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit} button{cursor:pointer}
+.app{max-width:900px;margin:auto;padding:18px 18px 42px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:4px 2px 18px}
+.kicker{font-size:11px;letter-spacing:.24em;color:var(--muted)} h1{margin:3px 0;font-size:clamp(28px,7vw,42px);font-style:italic;letter-spacing:-.03em}.gold{color:var(--gold)}
+.level-pill{min-width:92px;text-align:center;background:rgba(23,34,54,.9);border:1px solid var(--line);border-radius:16px;padding:10px 12px}.level-pill .num{font-size:32px;font-weight:900;line-height:1}
+.label{font-size:11px;color:var(--muted);letter-spacing:.12em}.card{background:rgba(16,24,39,.94);border:1px solid var(--line);border-radius:20px;padding:17px;margin-top:13px}
+.hero{padding:18px}.hero-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.hero-xp{font-size:13px;color:var(--muted);margin-top:4px}.hero-xp strong{color:var(--text);font-size:18px}.hero-next{text-align:right;color:var(--muted);font-size:12px}.hero-next strong{display:block;color:var(--gold);font-size:15px}
+.bar{height:8px;background:#2a374b;border-radius:99px;overflow:hidden;margin-top:11px}.fill{height:100%;border-radius:99px}
+.grid{display:grid;gap:10px}.stats{grid-template-columns:repeat(5,1fr);margin-top:13px}.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 10px;min-width:0}.stat b{display:block;font-size:23px;margin-top:3px}.stat .bar{height:5px;margin-top:8px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:14px 0 0;padding-bottom:2px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tabs button{min-height:42px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:8px 13px;white-space:nowrap}.tabs button.active{background:var(--gold);color:#101010;border-color:var(--gold)}
+.section-title{display:flex;justify-content:space-between;gap:10px;align-items:center}.section-title h2{margin:0;font-size:18px}.badge{font-size:12px;color:var(--gold);white-space:nowrap}
+.note{color:var(--muted);font-size:13px;line-height:1.45}.actions{grid-template-columns:1fr 1fr;margin-top:10px}
+button.action,button.quest,.arc-item,.target,.reward,.reminder,.check-row{width:100%;min-height:46px;border:1px solid var(--line);background:#1a2639;color:var(--text);border-radius:12px;padding:10px 12px;text-align:left}.action{display:flex;justify-content:space-between;align-items:center;gap:8px}.action:hover,.quest:hover,.arc-item:hover,.target:hover,.reward:hover{border-color:var(--gold)}
+.arc-card{display:flex;justify-content:space-between;align-items:center;gap:16px}.arc-copy h2{margin:2px 0 4px;font-size:22px}.arc-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}.arc-progress{min-width:125px;text-align:right}
+.skill,.quest,.target,.reward,.reminder,.check-row{background:#111c2d;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:9px}.skill-top{display:flex;justify-content:space-between;gap:10px}.skill small,.target small,.reward small,.reminder small,.check-row small{display:block;color:var(--muted);margin-top:4px}
+input[type=text],input[type=number],input[type=url],textarea,select{width:100%;background:#101a2b;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px;outline:none}textarea{min-height:88px;resize:vertical}
+.field{margin-top:12px}.field label{font-size:11px;color:var(--muted);letter-spacing:.12em}.primary{width:100%;background:var(--gold);color:#101010;border:0;border-radius:13px;padding:13px;font-weight:900;margin-top:12px}.secondary{background:#1a2639;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 13px}.danger{color:#ff8c8c}
+.icon-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}.icon-choice{width:48px;height:44px;border:1px solid var(--line);border-radius:11px;background:#101a2b}.icon-choice.selected{border-color:var(--gold);background:rgba(243,182,63,.14)}
+.hidden{display:none!important}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.muted{color:var(--muted)}.big{font-size:28px;font-weight:900}.center{text-align:center}
+.small-btn{border:1px solid var(--line);background:#1a2639;color:var(--text);border-radius:9px;padding:7px 9px}.link-btn{background:none;border:0;color:#aab8cc;text-decoration:underline;padding:0}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:#101010;padding:13px 20px;border-radius:14px;font-weight:900;display:none;z-index:20;max-width:88%;text-align:center}
+@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.stats .stat:last-child{grid-column:1/-1}.actions,.two,.three{grid-template-columns:1fr}.arc-card{align-items:flex-start;flex-direction:column}.arc-progress{width:100%;text-align:left}.hero-top{align-items:flex-start}.level-pill{min-width:78px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div><div class="kicker">PROJECT ASCENSION</div><h1>ASCENSION <span class="gold">2.0</span></h1><div class="note">Your character. Your progression. Your game.</div></div>
+ <div class="level-pill"><div class="label">LEVEL</div><div class="num" id="level">17</div></div>
+</header>
+
+<section class="card hero">
+ <div class="hero-top"><div><div class="label">TOTAL XP</div><div class="hero-xp"><strong id="xp">8,180</strong> XP</div></div><div class="hero-next"><strong id="toGo">320</strong> XP to Level 18</div></div>
+ <div class="bar"><div class="fill" id="xpbar" style="background:var(--gold)"></div></div>
+</section>
+
+<section class="grid stats">
+ <div class="stat"><div class="label">STRENGTH</div><b>16</b><div class="bar"><div class="fill" style="background:var(--pink);width:78%"></div></div></div>
+ <div class="stat"><div class="label">CONDITIONING</div><b>15</b><div class="bar"><div class="fill" style="background:var(--green);width:72%"></div></div></div>
+ <div class="stat"><div class="label">MOBILITY</div><b>14</b><div class="bar"><div class="fill" style="background:var(--blue);width:65%"></div></div></div>
+ <div class="stat"><div class="label">COMBAT</div><b>12</b><div class="bar"><div class="fill" style="background:var(--purple);width:55%"></div></div></div>
+ <div class="stat"><div class="label">SPORTS</div><b>15</b><div class="bar"><div class="fill" style="background:var(--orange);width:70%"></div></div></div>
+</section>
+
+<div class="tabs">
+ <button class="active" data-tab="dashboard">Dashboard</button><button data-tab="arcs">Arcs</button><button data-tab="weekly">Weekly Targets</button>
+ <button data-tab="xpTab">Daily XP</button><button data-tab="skills">Skill Tree</button><button data-tab="quests">Quests</button><button data-tab="rewards">Rewards</button>
+ <button data-tab="checkin">Check-In</button><button data-tab="progress">Progress</button><button data-tab="levels">Level System</button>
+</div>
+
+<section id="dashboard" class="tab">
+ <section class="card">
+  <div class="section-title"><h2>⚡ CURRENT ARCS</h2><span id="activeArcCount" class="badge"></span></div>
+  <div id="dashboardArcs"></div>
+ </section>
+ <section class="card">
+  <div class="section-title"><h2>⚡ QUICK XP</h2></div>
+  <div class="grid actions">
+   <button class="action log-xp" data-xp="50" data-key="Full-body session"><span>💪 Log full-body session</span><b>+50 XP</b></button>
+   <button class="action log-xp" data-xp="25" data-key="Skill practice"><span>🎯 Log skill practice</span><b>+25 XP</b></button>
+   <button class="action log-xp" data-xp="40" data-key="Sports / boxing session"><span>🥊 Log sports / boxing</span><b>+40 XP</b></button>
+   <button class="action log-xp" data-xp="20" data-key="Fuel training"><span>🍽️ Log fuel training</span><b>+20 XP</b></button>
+  </div>
+ </section>
+ <section class="card">
+ <div class="section-title"><h2>🔔 PERSONAL REMINDERS</h2></div>
+ <div class="two">
+  <div><input id="reminderName" type="text" placeholder="Reminder"><input id="reminderWhen" type="text" placeholder="e.g. Monday 9:00"></div>
+  <button class="primary" id="addReminder">＋ Add Reminder</button>
+ </div>
+ <div id="reminderList"></div>
+</section>
+
+<section class="card">
+  <div class="section-title"><h2>❄️ MONDAY FREEZE</h2><span class="badge">Weekly reset</span></div>
+  <p class="note">Reset the week: review the numbers, choose up to 2 active Arcs, set Weekly Targets, check rewards and reminders, then freeze the plan.</p>
+  <button class="primary" id="freezeBtn">Start Monday Freeze</button>
+ </section>
+</section>
+
+<section id="arcs" class="tab card hidden">
+ <div id="arcOverview">
+  <div class="section-title"><h2>🗺️ YOUR ARCS</h2><span id="arcCount" class="badge"></span></div>
+  <p class="note">Life areas. Real progress. Your story. Maximum 2 active Arcs at once.</p>
+  <div class="tabs" style="margin-top:10px">
+   <button class="active" data-filter="active">Active</button><button data-filter="completed">Completed</button><button data-filter="archived">Archived</button>
+  </div>
+  <div id="arcList"></div>
+  <button class="primary" id="newArcBtn">＋ Create New Arc</button>
+ </div>
+ <div id="arcCreate" class="hidden">
+  <div class="section-title"><h2>✨ CREATE NEW ARC</h2><button class="link-btn" id="cancelArc">Cancel</button></div>
+  <div class="field"><label>ARC NAME</label><input id="arcName" type="text" placeholder="e.g. Driving Arc"></div>
+  <div class="field"><label>ICON</label><div class="icon-row" id="iconRow"></div></div>
+  <div class="field"><label>OBJECTIVE / WHY</label><textarea id="arcWhy" placeholder="Why does this Arc matter?"></textarea></div>
+  <button class="primary" id="createArc">Create Arc</button>
+ </div>
+ <div id="arcDetail" class="hidden">
+  <button class="link-btn" id="backToArcs">← Arcs</button>
+  <div class="row" style="margin-top:10px"><div><div id="detailIcon" class="big"></div><h2 id="detailName" style="margin:2px 0"></h2></div><span id="detailStatus" class="badge"></span></div>
+  <p id="detailWhy" class="note"></p>
+  <div class="card">
+   <div class="section-title"><h2>MILESTONES</h2><span id="detailProgress" class="badge">0 / 0</span></div>
+   <div id="milestoneList"></div>
+   <button class="primary" id="addMilestoneBtn">＋ Add Milestone</button>
+   <div id="milestoneForm" class="hidden">
+    <div class="field"><label>MILESTONE NAME</label><input id="milestoneName" type="text" placeholder="e.g. Complete a roundabout"></div>
+    <div class="field"><label>DESCRIPTION</label><textarea id="milestoneDescription" placeholder="What does completing this milestone mean?"></textarea></div>
+    <div class="two">
+     <div class="field"><label>XP REWARD</label><input id="milestoneXp" type="number" min="1" value="20"></div>
+     <div class="field"><label>DIFFICULTY (OPTIONAL)</label><select id="milestoneDifficulty"><option value="">Not set</option><option>Easy</option><option>Medium</option><option>Hard</option><option>Major</option></select></div>
+    </div>
+    <button class="primary" id="saveMilestone">Save Milestone</button><button class="link-btn" id="cancelMilestone" style="margin-top:10px">Cancel</button>
+   </div>
+  </div>
+  <div class="card">
+   <div class="section-title"><h2>⚙️ ARC MANAGEMENT</h2></div>
+   <div class="two"><button class="secondary" id="completeArc">Mark Completed</button><button class="secondary danger" id="archiveArc">Archive Arc</button></div>
+  </div>
+ </div>
+</section>
+
+<section id="weekly" class="tab card hidden">
+ <div class="section-title"><h2>🎯 WEEKLY TARGETS</h2><span id="weeklyRating" class="badge">0 / 0</span></div>
+ <p class="note">Weekly commitments are separate from XP. Completion and partial completion update the weekly rating. XP can be linked in the background without appearing on the target card.</p>
+ <div class="two">
+  <button class="primary" id="addTargetBtn">＋ Add Weekly Target</button>
+  <button class="secondary" id="bulkTargetBtn" style="margin-top:12px">＋ Bulk Add Targets</button>
+ </div>
+ <div id="targetForm" class="hidden card">
+  <h3 style="margin-top:0">NEW WEEKLY TARGET</h3>
+  <div class="field"><label>TARGET</label><input id="targetName" type="text" placeholder="e.g. Attend driving lesson"></div>
+  <div class="field"><label>ARC</label><select id="targetArc"></select></div>
+  <div class="field"><label>FREQUENCY / REQUIREMENT</label><input id="targetFreq" type="text" placeholder="e.g. 2× this week"></div>
+  <div class="field"><label>XP LINK (OPTIONAL, HIDDEN FROM TARGET CARD)</label><input id="targetXp" type="number" min="0" value="0"></div>
+  <button class="primary" id="saveTarget">Save Target</button>
+ </div>
+ <div id="bulkForm" class="hidden card">
+  <h3 style="margin-top:0">BULK ADD WEEKLY TARGETS</h3>
+  <p class="note">One target per line. Format: Target | Arc | Frequency | XP (optional)</p>
+  <textarea id="bulkText" placeholder="Attend driving lesson | Driving Arc | 1× | 50&#10;Practise road signs | Driving Arc | 5 days | 20"></textarea>
+  <button class="primary" id="saveBulk">Add All Targets</button>
+ </div>
+ <div id="targetList"></div>
+</section>
+
+<section id="xpTab" class="tab card hidden">
+ <div class="section-title"><h2>⚡ DAILY XP</h2><span class="badge">Action → XP</span></div>
+ <p class="note">Daily XP is separate from Weekly Targets. If an XP action is linked to a weekly target, logging it can update that target automatically.</p>
+ <div id="dailyXpList"></div>
+ <div class="card">
+  <h3 style="margin-top:0">＋ Custom XP Action</h3>
+  <div class="two"><input id="customXpName" type="text" placeholder="Action"><input id="customXpValue" type="number" min="1" value="20"></div>
+  <button class="primary" id="addCustomXp">Add XP Action</button>
+ </div>
+</section>
+
+<section id="skills" class="tab card hidden">
+ <div class="section-title"><h2>🌳 SKILL TREE</h2><span class="badge">Character skills</span></div>
+ <div id="skillsList"></div>
+</section>
+
+<section id="quests" class="tab card hidden">
+ <div class="section-title"><h2>🎯 QUESTS</h2><span id="qdone" class="badge">0 / 5</span></div>
+ <p class="note">Quests are progression challenges. They are separate from Weekly Targets.</p>
+ <div id="questsList"></div>
+</section>
+
+<section id="rewards" class="tab card hidden">
+ <div class="section-title"><h2>🎁 ACTUAL REWARDS</h2><span class="badge">Earned through levels</span></div>
+ <div class="three">
+  <div class="reward"><b>🟢 Small</b><small>£5–£10</small><div class="note">Unlocks: Level 5, 15, 35, 45, 55, 65…</div></div>
+  <div class="reward"><b>🔵 Medium</b><small>£10–£25</small><div class="note">Unlocks: Level 10, 20, 30, 40, 50, 60…</div></div>
+  <div class="reward"><b>🟣 Major</b><small>£25–£60+</small><div class="note">Unlocks: Level 25, 50, 75, 100…</div></div>
+ </div>
+ <div class="card">
+  <h3 style="margin-top:0">Reward Choice</h3>
+  <p class="note" id="rewardUnlockText"></p>
+  <div class="field"><label>REWARD CHOSEN</label><input id="rewardChoice" type="text" placeholder="e.g. Nike trainers"></div>
+  <button class="primary" id="saveReward">Save Reward Choice</button>
+ </div>
+ <div class="card"><div class="section-title"><h3>Reward History</h3><span class="badge">Level + choice</span></div><div id="rewardHistory"></div></div>
+</section>
+
+<section id="checkin" class="tab card hidden">
+ <div class="section-title"><h2>📊 WEEKLY CHECK-IN</h2><span class="badge">Numbers only</span></div>
+ <p class="note">A quantitative snapshot. No written review here.</p>
+ <div class="two">
+  <div class="check-row"><b>⚡ Energy</b><input id="energy" type="number" min="0" max="10" value="0"><small>/ 10</small></div>
+  <div class="check-row"><b>😊 Mood</b><input id="mood" type="number" min="0" max="10" value="0"><small>/ 10</small></div>
+  <div class="check-row"><b>🧠 Discipline</b><input id="discipline" type="number" min="0" max="10" value="0"><small>/ 10</small></div>
+  <div class="check-row"><b>💪 Confidence</b><input id="confidence" type="number" min="0" max="10" value="0"><small>/ 10</small></div>
+ </div>
+ <button class="primary" id="saveCheckin">Save Weekly Check-In</button>
+ <div class="card"><h3 style="margin-top:0">Recent Check-Ins</h3><div id="checkinHistory"></div></div>
+</section>
+
+<section id="progress" class="tab card hidden">
+ <div class="section-title"><h2>📈 PROGRESS TRACKER</h2><span class="badge">Project Phoenix</span></div>
+ <p class="note">A simple quantitative tracker for the Project Phoenix Arc. This does not replace your existing written review.</p>
+ <div class="two">
+  <div class="field"><label>CURRENT WEIGHT</label><input id="currentWeight" type="number" step="0.1" value="94.05"></div>
+  <div class="field"><label>GOAL WEIGHT</label><input id="goalWeight" type="number" step="0.1" value="85"></div>
+ </div>
+ <button class="primary" id="saveWeight">Save Progress</button>
+ <div class="card"><div class="row"><span>Current</span><b id="weightDisplay">94.05 kg</b></div><div class="row"><span>Goal</span><b id="goalDisplay">85 kg</b></div><div class="bar"><div class="fill" id="weightBar" style="background:var(--green)"></div></div></div>
+ <div class="card">
+  <div class="section-title"><h3>Weekly Review</h3><span class="badge">External document</span></div>
+  <p class="note">Keep your qualitative Weekly Review in your existing Google Doc.</p>
+  <input id="reviewUrl" type="url" placeholder="Paste your Google Docs link here">
+  <button class="primary" id="saveReview">Save Review Link</button>
+  <button class="secondary" id="openReview" style="width:100%;margin-top:9px">Open Weekly Review</button>
+ </div>
+</section>
+
+<section id="levels" class="tab card hidden">
+ <div class="section-title"><h2>📊 LEVEL SYSTEM</h2><span id="levelSummary" class="badge"></span></div>
+ <p class="note">Your next five levels are shown here. Rewards unlock at specific levels separately.</p>
+ <div id="levelTable"></div>
+</section>
+
+<section class="card">
+ <div class="section-title"><h2>🧠 REMINDERS</h2></div>
+ <ul class="note" style="margin-bottom:0">
+  <li><b>Consistency &gt; Perfection</b></li>
+  <li><b>Progress &gt; Punishment</b></li>
+  <li><b>Missing 1 day ≠ Fail</b></li>
+  <li><b>Adapt &gt; Quit</b></li>
+  <li><b>I am building momentum</b></li>
+  <li><b>Sustainability is key</b></li>
+ </ul>
+</section>
+
+
+
+<section class="card">
+ <div class="section-title"><h2>🌱 REAL REWARDS</h2></div>
+ <ul class="note" style="margin-bottom:0">
+  <li>Better stamina</li><li>More definition</li><li>Stronger body</li><li>Better mood</li><li>Better performance in sport</li><li>More confidence</li><li>More discipline</li><li>Feeling comfortable in my clothes</li><li>Looking good in my clothes</li><li>Becoming the version of myself I want to be</li>
+ </ul>
+</section>
+
+<div class="toast" id="toast" role="status"></div>
+</div>
+
+<script>
+const KEY="projectAscensionMasterV1";
+const defaultState={
+ xp:8180,
+ arcs:[{id:1,name:"Athlete Arc",icon:"🏋️",why:"Build strength, conditioning, skills and sporting ability.",status:"active",milestones:[]}],
+ targets:[], customXp:[],
+ quests:[false,false,false,false,false],
+ rewards:[], reminders:[],
+ checkins:[], weight:94.05, goalWeight:85, reviewUrl:"",
+ xpLog:[]
+};
+let state=JSON.parse(localStorage.getItem(KEY)||"null")||structuredClone(defaultState);
+state.arcs=(state.arcs||[]).map(a=>({...a,milestones:Array.isArray(a.milestones)?a.milestones:[]}));
+state.targets=state.targets||[];state.customXp=state.customXp||[];state.rewards=state.rewards||[];state.reminders=state.reminders||[];state.checkins=state.checkins||[];state.xpLog=state.xpLog||[];
+let arcFilter="active",currentArcId=null,selectedIcon="🚗";
+const icons=["🚗","🏋️","🥊","⚽","🎨","🏠","✨"];
+const skills=[["💪 Push-ups","Elevated → knee → full push-up","60%","pink"],["🔥 Dips","Support → assisted → first unassisted → 5 reps → weighted","72%","gold"],["🧘 L-sit","Tuck → one-leg → alternating → full L-sit","35%","blue"],["🦾 Pull-ups","Australian → assisted → negatives → first pull-up","25%","purple"],["🦵 Pistol squat","Assisted → box → counterweight → full pistol","20%","green"]];
+const quests=[["Complete 2 full-body sessions",100],["Complete 3 skill-practice sessions",100],["Complete 1 boxing / combat session",100],["Complete 2 sports sessions",100],["Unlock one new physical skill",100]];
+const levels={1:0,2:500,3:1000,4:1500,5:2100,6:2750,7:3500,8:4250,9:5000,10:5600,11:6000,12:6250,13:6400,14:6550,15:6600,16:6650,17:7550,18:8500,19:9500,20:10600,21:11800,22:13100,23:14500,24:16000,25:17500};
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function toast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display="none",1900)}
+function levelFor(xp){let l=1;Object.keys(levels).map(Number).sort((a,b)=>a-b).forEach(n=>{if(xp>=levels[n])l=n});return l}
+function nextThreshold(l){return levels[l+1]??(levels[25]+(l-25)*1500)}
+function renderHeader(){const l=levelFor(state.xp),next=nextThreshold(l);document.getElementById("level").textContent=l;document.getElementById("xp").textContent=state.xp.toLocaleString();document.getElementById("toGo").textContent=Math.max(0,next-state.xp).toLocaleString();const base=levels[l]||0;document.getElementById("xpbar").style.width=Math.min(100,((state.xp-base)/Math.max(1,next-base))*100)+"%"}
+function renderArcs(){
+ const list=document.getElementById("arcList");const filtered=state.arcs.filter(a=>a.status===arcFilter);
+ list.innerHTML=filtered.length?filtered.map(a=>`<button class="arc-item" data-id="${a.id}"><span style="font-size:28px">${a.icon}</span><span style="flex:1"><b>${esc(a.name)}</b><small>${esc(a.why)}</small></span><span>›</span></button>`).join(""):`<p class="note">No ${arcFilter} Arcs yet.</p>`;
+ document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openArcDetail(+b.dataset.id));
+ document.getElementById("arcCount").textContent=state.arcs.filter(a=>a.status==="active").length+" active";
+ document.getElementById("activeArcCount").textContent=state.arcs.filter(a=>a.status==="active").length+" active";
+ document.getElementById("dashboardArcs").innerHTML=state.arcs.filter(a=>a.status==="active").map(a=>`<div class="arc-card card"><div class="arc-copy"><div class="label">ACTIVE ARC</div><h2>${a.icon} ${esc(a.name)}</h2><p>${esc(a.why)}</p></div><div class="arc-progress"><span class="badge">${a.milestones.filter(m=>m.completed).length}/${a.milestones.length} milestones</span></div></div>`).join("")||'<p class="note">No active Arcs.</p>';
+ renderTargetArcOptions();
+}
+function renderTargetArcOptions(){const s=document.getElementById("targetArc");s.innerHTML=state.arcs.filter(a=>a.status==="active").map(a=>`<option value="${a.id}">${a.icon} ${esc(a.name)}</option>`).join("")||'<option value="">No active Arc</option>'}
+function openArcDetail(id){currentArcId=id;const a=state.arcs.find(x=>x.id===id);if(!a)return;document.getElementById("arcOverview").classList.add("hidden");document.getElementById("arcCreate").classList.add("hidden");document.getElementById("arcDetail").classList.remove("hidden");document.getElementById("detailIcon").textContent=a.icon;document.getElementById("detailName").textContent=a.name;document.getElementById("detailWhy").textContent=a.why;document.getElementById("detailStatus").textContent=a.status.toUpperCase();renderMilestones()}
+function closeArcDetail(){document.getElementById("arcDetail").classList.add("hidden");document.getElementById("arcOverview").classList.remove("hidden")}
+function renderMilestones(){const a=state.arcs.find(x=>x.id===currentArcId);if(!a)return;const done=a.milestones.filter(m=>m.completed).length;document.getElementById("detailProgress").textContent=done+" / "+a.milestones.length;document.getElementById("milestoneList").innerHTML=a.milestones.length?a.milestones.map(m=>`<label class="skill"><div class="row"><span><input type="checkbox" data-mid="${m.id}" ${m.completed?"checked":""}> <b>${esc(m.name)}</b></span><span class="badge">+${m.xp} XP</span></div>${m.description?`<small>${esc(m.description)}</small>`:""}${m.difficulty?`<small>Difficulty: ${esc(m.difficulty)}</small>`:""}</label>`).join(""):'<p class="note">No milestones yet. Add your first one.</p>';document.querySelectorAll("[data-mid]").forEach(c=>c.onchange=()=>{const m=a.milestones.find(x=>String(x.id)===c.dataset.mid);if(!m)return;m.completed=c.checked;state.xp+=c.checked?m.xp:-m.xp;save();render();renderMilestones();toast(c.checked?"Milestone complete! +"+m.xp+" XP":"Milestone reopened. XP removed.")})}
+function addXp(amount,key,targetId=null){state.xp+=amount;state.xpLog.push({date:new Date().toLocaleDateString(),key,amount});if(targetId){const t=state.targets.find(x=>x.id===targetId);if(t) t.progress=Math.min(t.required||1,(t.progress||0)+1)}save();render();toast("Logged! +"+amount+" XP")}
+function renderTargets(){const list=document.getElementById("targetList");const total=state.targets.length;let score=state.targets.reduce((s,t)=>s+(t.status==="complete"?1:t.status==="partial"?0.5:0),0);document.getElementById("weeklyRating").textContent=score+" / "+total;list.innerHTML=state.targets.length?state.targets.map(t=>{const a=state.arcs.find(x=>x.id===t.arcId);return `<div class="target"><div class="row"><div><b>${esc(t.name)}</b><small>${a?a.icon+" "+esc(a.name):"No Arc"} • ${esc(t.freq)}</small></div><span>${t.status==="complete"?"✓":t.status==="partial"?"½":"○"}</span></div><div class="grid actions" style="margin-top:8px"><button class="small-btn" data-tcomplete="${t.id}">Complete</button><button class="small-btn" data-tpartial="${t.id}">Partial</button></div></div>`}).join(""):'<p class="note">No targets set for this week yet.</p>';document.querySelectorAll("[data-tcomplete]").forEach(b=>b.onclick=()=>setTargetStatus(+b.dataset.tcomplete,"complete"));document.querySelectorAll("[data-tpartial]").forEach(b=>b.onclick=()=>setTargetStatus(+b.dataset.tpartial,"partial"))}
+function setTargetStatus(id,status){const t=state.targets.find(x=>x.id===id);if(!t)return;const was=t.status;t.status=status;if(status==="complete"&&was!=="complete"&&t.xp>0)addXp(t.xp,"Weekly Target: "+t.name);else{save();render()}toast(status==="complete"?"Target complete":"Target marked partial")}
+function renderDailyXp(){const base=[["Full-body session",50],["Skill practice",25],["Sports / boxing session",40],["Fuel training",20],["1,000 steps",15],["1.5L water",15],["MSK Achilles rehab",25],...state.customXp.map(x=>[x.name,x.xp])];document.getElementById("dailyXpList").innerHTML=base.map((x,i)=>`<button class="action log-xp" data-xp="${x[1]}" data-key="${esc(x[0])}" style="width:100%;margin-top:9px"><span>${esc(x[0])}</span><b>+${x[1]} XP</b></button>`).join("");document.querySelectorAll("#dailyXpList .log-xp").forEach(b=>b.onclick=()=>{const key=b.dataset.key;const linked=state.targets.find(t=>t.xp>0&&t.name.toLowerCase()===key.toLowerCase()&&t.status!=="complete");addXp(+b.dataset.xp,key,linked?.id);if(linked){linked.status="complete";save();render()}})}
+function renderSkills(){document.getElementById("skillsList").innerHTML=skills.map(s=>`<div class="skill"><div class="skill-top"><b>${s[0]}</b><span>${s[2]}</span></div><small>${s[1]}</small><div class="bar"><div class="fill" style="background:var(--${s[3]==="gold"?"gold":s[3]});width:${s[2]}"></div></div></div>`).join("")}
+function renderQuests(){document.getElementById("questsList").innerHTML=quests.map((q,i)=>`<label class="quest"><span><input type="checkbox" data-q="${i}" ${state.quests[i]?"checked":""}> ${q[0]}</span><span class="badge">+${q[1]} XP</span></label>`).join("");document.querySelectorAll("[data-q]").forEach(c=>c.onchange=()=>{const i=+c.dataset.q;state.quests[i]=c.checked;state.xp+=c.checked?quests[i][1]:-quests[i][1];save();render();toast(c.checked?"Quest complete! +100 XP":"Quest reopened. XP removed.")});document.getElementById("qdone").textContent=state.quests.filter(Boolean).length+" / "+quests.length}
+function rewardType(l){if(l>=25&&l%25===0)return"Major";if(l>=10&&l%10===0)return"Medium";if(l>=5&&(l-5)%10===0)return"Small";return null}
+function renderRewards(){const l=levelFor(state.xp),type=rewardType(l);document.getElementById("rewardUnlockText").textContent=type?`Level ${l} unlocks a ${type} reward. Choose your reward and save it to the history.`:`No new reward unlock at Level ${l}.`;document.getElementById("rewardHistory").innerHTML=state.rewards.length?state.rewards.slice().reverse().map(r=>`<div class="reward"><b>Level ${r.level} • ${esc(r.type)}</b><small>${esc(r.choice)} • ${esc(r.date)}</small></div>`).join(""):'<p class="note">No reward choices recorded yet.</p>'}
+function renderCheckins(){document.getElementById("checkinHistory").innerHTML=state.checkins.length?state.checkins.slice().reverse().map(c=>`<div class="check-row"><b>${esc(c.date)}</b><small>Energy ${c.energy}/10 • Mood ${c.mood}/10 • Discipline ${c.discipline}/10 • Confidence ${c.confidence}/10</small></div>`).join(""):'<p class="note">No check-ins recorded yet.</p>'}
+function renderProgress(){document.getElementById("currentWeight").value=state.weight;document.getElementById("goalWeight").value=state.goalWeight;document.getElementById("weightDisplay").textContent=state.weight+" kg";document.getElementById("goalDisplay").textContent=state.goalWeight+" kg";const pct=Math.max(0,Math.min(100,(94.05-state.weight)/(94.05-state.goalWeight)*100));document.getElementById("weightBar").style.width=(isFinite(pct)?pct:0)+"%";document.getElementById("reviewUrl").value=state.reviewUrl||""}
+function renderLevels(){const l=levelFor(state.xp);document.getElementById("levelSummary").textContent="Current Level "+l;let rows=[];for(let n=l;n<l+5;n++){const threshold=levels[n]??(levels[25]+(n-25)*1500);rows.push(`<tr><td>Level ${n}</td><td>${threshold.toLocaleString()} XP</td><td>${rewardType(n)||"—"}</td></tr>`)}document.getElementById("levelTable").innerHTML=`<table><thead><tr><th>Level</th><th>XP required</th><th>Reward unlock</th></tr></thead><tbody>${rows.join("")}</tbody></table>`}
+function renderReminders(){document.getElementById("reminderList").innerHTML=state.reminders.map(r=>`<div class="reminder"><div class="row"><span><b>${esc(r.name)}</b><small>${esc(r.when)}</small></span><button class="small-btn" data-rem="${r.id}">Done</button></div></div>`).join("")||'<p class="note">No reminders yet.</p>';document.querySelectorAll("[data-rem]").forEach(b=>b.onclick=()=>{state.reminders=state.reminders.filter(r=>r.id!==+b.dataset.rem);save();renderReminders()})}
+function render(){renderHeader();renderArcs();renderTargets();renderDailyXp();renderSkills();renderQuests();renderRewards();renderCheckins();renderProgress();renderLevels();renderReminders()}
+function esc(v){return String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+
+document.querySelectorAll(".tabs button[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button[data-tab]").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.remove("hidden")});
+icons.forEach((ic,i)=>{const b=document.createElement("button");b.className="icon-choice"+(i===0?" selected":"");b.textContent=ic;b.dataset.icon=ic;document.getElementById("iconRow").appendChild(b);b.onclick=()=>{document.querySelectorAll(".icon-choice").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");selectedIcon=ic}});
+document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");arcFilter=b.dataset.filter;renderArcs()});
+document.getElementById("newArcBtn").onclick=()=>{if(state.arcs.filter(a=>a.status==="active").length>=2){toast("You can have a maximum of 2 active Arcs.");return}document.getElementById("arcOverview").classList.add("hidden");document.getElementById("arcCreate").classList.remove("hidden")};
+document.getElementById("cancelArc").onclick=()=>{document.getElementById("arcCreate").classList.add("hidden");document.getElementById("arcOverview").classList.remove("hidden")};
+document.getElementById("createArc").onclick=()=>{const name=document.getElementById("arcName").value.trim(),why=document.getElementById("arcWhy").value.trim();if(!name)return toast("Give your Arc a name first.");if(state.arcs.filter(a=>a.status==="active").length>=2)return toast("Maximum 2 active Arcs.");state.arcs.push({id:Date.now(),name,icon:selectedIcon,why:why||"A new chapter in your progression.",status:"active",milestones:[]});save();render();document.getElementById("arcName").value="";document.getElementById("arcWhy").value="";document.getElementById("arcCreate").classList.add("hidden");document.getElementById("arcOverview").classList.remove("hidden");toast("Arc created!")};
+document.getElementById("backToArcs").onclick=closeArcDetail;
+document.getElementById("addMilestoneBtn").onclick=()=>document.getElementById("milestoneForm").classList.remove("hidden");
+document.getElementById("cancelMilestone").onclick=()=>document.getElementById("milestoneForm").classList.add("hidden");
+document.getElementById("saveMilestone").onclick=()=>{const a=state.arcs.find(x=>x.id===currentArcId);if(!a)return;const name=document.getElementById("milestoneName").value.trim();if(!name)return toast("Give your milestone a name first.");a.milestones.push({id:Date.now(),name,description:document.getElementById("milestoneDescription").value.trim(),xp:Math.max(1,+document.getElementById("milestoneXp").value||0),difficulty:document.getElementById("milestoneDifficulty").value,completed:false});save();renderMilestones();document.getElementById("milestoneForm").classList.add("hidden");document.getElementById("milestoneName").value="";document.getElementById("milestoneDescription").value="";toast("Milestone added!")};
+document.getElementById("completeArc").onclick=()=>{const a=state.arcs.find(x=>x.id===currentArcId);if(a){a.status="completed";save();render();closeArcDetail();toast("Arc marked completed!")}};
+document.getElementById("archiveArc").onclick=()=>{const a=state.arcs.find(x=>x.id===currentArcId);if(a){a.status="archived";save();render();closeArcDetail();toast("Arc archived!")}};
+document.querySelectorAll(".log-xp").forEach(b=>b.onclick=()=>addXp(+b.dataset.xp,b.dataset.key));
+document.getElementById("addTargetBtn").onclick=()=>document.getElementById("targetForm").classList.toggle("hidden");
+document.getElementById("bulkTargetBtn").onclick=()=>document.getElementById("bulkForm").classList.toggle("hidden");
+document.getElementById("saveTarget").onclick=()=>{const name=document.getElementById("targetName").value.trim();if(!name)return toast("Give your target a name.");state.targets.push({id:Date.now(),name,arcId:+document.getElementById("targetArc").value,freq:document.getElementById("targetFreq").value.trim()||"1× this week",xp:+document.getElementById("targetXp").value||0,status:"open"});save();render();document.getElementById("targetForm").classList.add("hidden");document.getElementById("targetName").value="";toast("Weekly target added!")};
+document.getElementById("saveBulk").onclick=()=>{const lines=document.getElementById("bulkText").value.split(/\n+/).map(x=>x.trim()).filter(Boolean);let added=0;lines.forEach(line=>{const p=line.split("|").map(x=>x.trim());if(!p[0])return;const a=state.arcs.find(x=>x.name.toLowerCase()===String(p[1]||"").toLowerCase())||state.arcs.find(x=>x.status==="active");state.targets.push({id:Date.now()+added,name:p[0],arcId:a?.id||0,freq:p[2]||"1× this week",xp:+p[3]||0,status:"open"});added++});save();render();document.getElementById("bulkForm").classList.add("hidden");document.getElementById("bulkText").value="";toast(added+" weekly targets added!")};
+document.getElementById("addCustomXp").onclick=()=>{const n=document.getElementById("customXpName").value.trim(),x=+document.getElementById("customXpValue").value||0;if(!n||x<1)return toast("Add an action and XP value.");state.customXp.push({name:n,xp:x});save();render();toast("XP action added!")};
+document.getElementById("saveReward").onclick=()=>{const choice=document.getElementById("rewardChoice").value.trim(),l=levelFor(state.xp),type=rewardType(l);if(!type)return toast("No reward unlock at your current level.");if(!choice)return toast("Choose a reward first.");state.rewards.push({level:l,type,choice,date:new Date().toLocaleDateString()});save();render();document.getElementById("rewardChoice").value="";toast("Reward choice saved!")};
+document.getElementById("saveCheckin").onclick=()=>{const vals=["energy","mood","discipline","confidence"].map(id=>Math.max(0,Math.min(10,+document.getElementById(id).value||0)));state.checkins.push({date:new Date().toLocaleDateString(),energy:vals[0],mood:vals[1],discipline:vals[2],confidence:vals[3]});save();render();toast("Weekly check-in saved!")};
+document.getElementById("saveWeight").onclick=()=>{state.weight=+document.getElementById("currentWeight").value||state.weight;state.goalWeight=+document.getElementById("goalWeight").value||state.goalWeight;save();render();toast("Progress saved!")};
+document.getElementById("saveReview").onclick=()=>{state.reviewUrl=document.getElementById("reviewUrl").value.trim();save();toast("Weekly Review link saved!")};
+document.getElementById("openReview").onclick=()=>{if(state.reviewUrl)window.open(state.reviewUrl,"_blank");else toast("Add your Google Docs link first.")};
+document.getElementById("addReminder").onclick=()=>{const n=document.getElementById("reminderName").value.trim();if(!n)return toast("Add a reminder.");state.reminders.push({id:Date.now(),name:n,when:document.getElementById("reminderWhen").value.trim()||"No time set"});save();renderReminders();document.getElementById("reminderName").value="";document.getElementById("reminderWhen").value="";toast("Reminder added!")};
+document.getElementById("freezeBtn").onclick=()=>toast("Monday Freeze: review → plan → freeze the week.");
+render();
+</script>
+</body>
+</html>
