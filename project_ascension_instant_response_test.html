@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Ascension — Instant Response Test</title>
+<style>
+  :root{
+    --bg:#0f1726; --panel:#162236; --line:#33445f;
+    --text:#f4f7fb; --muted:#aebbd0; --gold:#f3b63f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; padding:28px 18px;
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  main{max-width:560px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 8px}
+  p{color:var(--muted);line-height:1.5}
+  .status{
+    margin:18px 0; padding:14px; border:1px solid var(--line);
+    border-radius:12px; background:#121d2f;
+  }
+  .action{
+    width:100%; min-height:52px; margin:10px 0;
+    border:1px solid var(--line); background:#1a2639;
+    color:var(--text); border-radius:12px; padding:10px 12px;
+    text-align:left; display:flex; justify-content:space-between;
+    align-items:center; gap:8px; font-size:16px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .action b{font-size:14px}
+  .action.active{
+    border-color:var(--gold);
+    box-shadow:0 0 0 2px var(--gold) inset;
+    background:rgba(243,182,63,.18);
+    transform:translateY(-1px);
+  }
+  .action.active b:before{content:"✓ ";color:var(--gold)}
+  .action:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .pass{color:#8fe388}
+  .fail{color:#ff8f8f}
+  .small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Instant Response Test</h1>
+  <p>Tap a button. It should immediately turn into the full gold/ticked active style — no refresh.</p>
+
+  <div id="status" class="status">
+    <strong>Status:</strong> Waiting for a tap…
+    <div class="small">The test also reports whether the <code>active</code> class was actually applied.</div>
+  </div>
+
+  <button type="button" class="action" data-name="Full-body session">
+    <span>Full-body session</span><b>+50 XP</b>
+  </button>
+  <button type="button" class="action" data-name="Skill practice">
+    <span>Skill practice</span><b>+25 XP</b>
+  </button>
+  <button type="button" class="action" data-name="1,000 steps">
+    <span>1,000 steps</span><b>+15 XP</b>
+  </button>
+
+  <p class="small">Tap the same button again to turn it back off.</p>
+</main>
+
+<script>
+document.querySelectorAll(".action").forEach(button => {
+  button.addEventListener("click", () => {
+    const on = button.classList.toggle("active");
+    button.setAttribute("aria-pressed", on ? "true" : "false");
+
+    const status = document.getElementById("status");
+    status.innerHTML =
+      "<strong class='" + (on ? "pass" : "") + "'>" +
+      (on ? "✓ Active immediately" : "○ Inactive immediately") +
+      "</strong><br>" +
+      button.dataset.name +
+      " — active class = <strong>" +
+      button.classList.contains("active") +
+      "</strong><div class='small'>No storage, XP system, tabs, rendering, or Monday Freeze is involved in this test.</div>";
+  });
+});
+</script>
+</body>
+</html>
